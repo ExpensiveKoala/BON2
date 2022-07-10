@@ -37,14 +37,23 @@ public class BON2Impl {
         Remapper remapper = new SimpleRemapper(mcpToMapped);
         ClassCollection inputCC = JarUtils.readFromJar(inputJar, errorHandler, progress);
         if (mcp != null) {
-            ClassCollection client = JarUtils.readFromJar(new File(BONFiles.FG3_MC_CACHE, mcp.getMCVersion() + "/client.jar"), errorHandler, progress, false);
-            ClassCollection server = JarUtils.readFromJar(new File(BONFiles.FG3_MC_CACHE, mcp.getMCVersion() + "/server.jar"), errorHandler, progress, false);
-            progress.start(client.getClasses().size() + server.getClasses().size() + inputCC.getClasses().size(), "Building inheritance");
+            File clientJar = new File(BONFiles.FG3_MC_CACHE, mcp.getMCVersion() + "/client.jar");
+            File serverJar = new File(BONFiles.FG3_MC_CACHE, mcp.getMCVersion() + "/server.jar");
+            ClassCollection client = JarUtils.readFromJar(clientJar, errorHandler, progress, false);
+            ClassCollection server;
+            if(serverJar.exists()) {
+                 server = JarUtils.readFromJar(serverJar, errorHandler, progress, false);
+            } else {
+                server = null;
+            }
+            progress.start(client.getClasses().size() + (server == null ? 0 : server.getClasses().size()) + inputCC.getClasses().size(), "Building inheritance");
 
             Inheritance inh = new Inheritance();
             inh.addTree(client, false, 0, progress);
-            inh.addTree(server, true, client.getClasses().size(), progress);
-            inh.addTree(inputCC, false, client.getClasses().size() + server.getClasses().size(), progress);
+            if(serverJar.exists()) {
+                inh.addTree(server, true, client.getClasses().size(), progress);
+            }
+            inh.addTree(inputCC, false, client.getClasses().size() + (server == null ? 0 : server.getClasses().size()), progress);
             inh.bake(progress);
 
             File mcpTarget = mcp.getTarget();

@@ -1,7 +1,7 @@
 plugins {
   id 'com.github.ben-manes.versions' version '0.25.0'
   id 'java'
-  id 'maven'
+  //id 'maven'
   id 'maven-publish'
   id 'eclipse'
   id 'idea'
@@ -10,7 +10,7 @@ plugins {
 
 version = '2.5.1.' + (System.getenv('BUILD_NUMBER') ?: 'CUSTOM')
 group = 'com.github.parker8283'
-targetCompatibility = sourceCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+targetCompatibility = sourceCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = JavaLanguageVersion.of(17)
 
 repositories {
     mavenCentral()
@@ -18,12 +18,12 @@ repositories {
 }
 
 dependencies {
-	compile 'com.google.code.gson:gson:2.8.5'
-    compile 'net.sf.jopt-simple:jopt-simple:5.0.4'
-    compile 'net.minecraftforge:srgutils:0.2.12'
-    compile 'org.ow2.asm:asm:7.2'
-    compile 'org.ow2.asm:asm-commons:7.2'
-    compile 'org.ow2.asm:asm-tree:7.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'net.sf.jopt-simple:jopt-simple:5.0.4'
+    implementation 'net.minecraftforge:srgutils:0.4.3'
+    implementation 'org.ow2.asm:asm:9.3'
+    implementation 'org.ow2.asm:asm-commons:9.3'
+    implementation 'org.ow2.asm:asm-tree:9.3'
 }
 
 task copyAndReplace(type: Copy) {

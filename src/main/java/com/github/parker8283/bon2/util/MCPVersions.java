@@ -185,7 +185,7 @@ public class MCPVersions {
             try {
                 byte[] cfgData = IOUtils.getZipData(data, "config.json");
                 Speced spec = IOUtils.loadJson(cfgData, Speced.class);
-                if (spec.spec != 1) {
+                if (!(spec.spec == 1 || spec.spec == 2 || spec.spec == 3)) {
                     System.out.println("Failed to read MCPConfig data from: " + data.getAbsolutePath() + " Unknown spec: " + spec.spec);
                     return null;
                 }
